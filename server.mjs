@@ -15,11 +15,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST, // Provide the correct host
-    database: process.env.DB_NAME,
+    user: "esaakidis",
+    host: "localhost", // Change to the correct host
+    database: "kycy",
     password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT // Provide the correct port
+    port: 5432 // Change to the correct port
 });
 
 app.get('/api/organisations', async (req, res) => {
