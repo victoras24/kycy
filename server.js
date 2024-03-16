@@ -14,6 +14,14 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+// Middleware to set Content-Type header for JavaScript files
+app.use((req, res, next) => {
+    if (req.url.endsWith('.js')) {
+        res.setHeader('Content-Type', 'text/javascript');
+    }
+    next();
+});
+
 const pool = new Pool({
     user: "esaakidis",
     host: "localhost", // Change to the correct host
