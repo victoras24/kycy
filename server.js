@@ -16,7 +16,7 @@ app.use(cors(corsOptions));
 
 const pool = new Pool({
     user: "esaakidis",
-    host: "localhost", // Change to the correct host
+    host: "/var/run/postgresql", // Change to the correct host
     database: "kycy",
     password: process.env.DB_PASSWORD,
     port: 5432 // Change to the correct port
