@@ -1,5 +1,7 @@
 import express from 'express';
-import { Pool } from 'pg';
+import pkg from 'pg';
+const { Pool } = pkg; // Importing 'Pool' from 'pg' module
+
 import cors from 'cors';
 import dotenv from 'dotenv';
 
@@ -14,12 +16,20 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+// Middleware to set Content-Type header for JavaScript files
+app.use((req, res, next) => {
+    if (req.url.endsWith('.js')) {
+        res.setHeader('Content-Type', 'text/javascript');
+    }
+    next();
+});
+
 const pool = new Pool({
     user: "esaakidis",
     host: "/var/run/postgresql", // Change to the correct host
     database: "kycy",
     password: process.env.DB_PASSWORD,
-    port: 5432 // Change to the correct port
+    port: "5432"
 });
 
 app.get('/api/organisations', async (req, res) => {
