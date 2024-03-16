@@ -1,7 +1,7 @@
-import express from 'express';
-import { Pool } from 'pg';
-import cors from 'cors';
-import dotenv from 'dotenv';
+const express = require('express');
+const { Pool } = require('pg');
+const cors = require('cors');
+const dotenv = require('dotenv');
 
 dotenv.config(); // Load environment variables from .env file
 
@@ -24,10 +24,10 @@ app.use((req, res, next) => {
 
 const pool = new Pool({
     user: "esaakidis",
-    host: "localhost", // Change to the correct host
+    host: "/var/run/postgresql", // Change to the correct host
     database: "kycy",
     password: process.env.DB_PASSWORD,
-    port: 5432 // Change to the correct port
+    port: "5432"
 });
 
 app.get('/api/organisations', async (req, res) => {
