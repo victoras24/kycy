@@ -71,7 +71,8 @@
 }
 
 .search-result-organisation-name,
-.search-result-address {
+.search-result-address,
+.search-result-each-address {
     background-color: transparent;
 }
 
