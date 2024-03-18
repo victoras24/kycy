@@ -4,11 +4,11 @@ export const fetchCompanyData = (value) => {
     )
         .then((res) => {
             if (!res.ok) {
-                throw new Error("Network response was not ok");
+                throw new Error("Network response was not ok")
             }
-            return res.json();
+            return res.json()
         })
         .then((data) => {
-            return data.result.records;
-        });
-};
+            return data.result.records
+        })
+}

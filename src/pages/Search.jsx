@@ -6,49 +6,49 @@ import { fetchCompanyData } from '../utils/companyDataApi';
 import { fetchAddressData } from '../utils/companyAddressApi';
 
 export default function Search() {
-    const [input, setInput] = useState("");
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [input, setInput] = useState("")
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
 
     const debouncedFetchDataFromApi = debounce((value) => {
-        fetchDataFromApi(value);
-    }, 300);
+        fetchDataFromApi(value)
+    }, 300)
 
     useEffect(() => {
         if (input.trim() !== "") {
-            debouncedFetchDataFromApi(input);
+            debouncedFetchDataFromApi(input)
         } else {
-            setData([]);
+            setData([])
         }
-        return () => debouncedFetchDataFromApi.cancel();
-    }, [input]);
+        return () => debouncedFetchDataFromApi.cancel()
+    }, [input])
 
     const fetchDataFromApi = (value) => {
-        setLoading(true);
+        setLoading(true)
         fetchCompanyData(value)
             .then((companyData) => {
                 const addressPromises = companyData.map(company => {
-                    return fetchAddressData(company.address_seq_no);
-                });
+                    return fetchAddressData(company.address_seq_no)
+                })
                 Promise.all(addressPromises)
                     .then((addressResults) => {
                         const mergedData = companyData.map((company, index) => {
                             return {
                                 ...company,
                                 addresses: addressResults[index] || []
-                            };
-                        });
-                        setData(mergedData);
-                    });
+                            }
+                        })
+                        setData(mergedData)
+                    })
             })
             .catch((error) => {
-                setError(error.message);
+                setError(error.message)
             })
             .finally(() => {
-                setLoading(false);
-            });
-    };
+                setLoading(false)
+            })
+    }
 
     return (
         <div className="search-bar-container">
@@ -88,5 +88,5 @@ export default function Search() {
                 </div>
             )}
         </div>
-    );
+    )
 }

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useCycle, AnimatePresence } from "framer-motion";
 import { useDimensions } from "./useDimension";
 import { ToggleMenu } from "./ToggleMenu";
@@ -25,9 +25,22 @@ const sidebar = {
 }
 
 export const SideMenu = () => {
-    const [isOpen, toggleOpen] = useCycle(false, true)
+    const [isOpen, setIsOpen] = useCycle(false, true)
     const containerRef = useRef(null)
     const { height } = useDimensions(containerRef)
+
+    useEffect(() => {
+        document.addEventListener("mousedown", clickOutsideMenuToClose)
+        return () => {
+            document.removeEventListener("mousedown", clickOutsideMenuToClose)
+        }
+    })
+
+    const clickOutsideMenuToClose = (e) => {
+        if (isOpen && !containerRef.current?.contains(e.target)) {
+            setIsOpen(false)
+        }
+    }
 
     return (
         <AnimatePresence>
@@ -40,7 +53,7 @@ export const SideMenu = () => {
             >
                 <motion.div className="background" variants={sidebar} />
                 <MenuNav />
-                <ToggleMenu toggle={() => toggleOpen()} />
+                <ToggleMenu toggle={() => setIsOpen()} />
             </motion.nav>
         </AnimatePresence>
     )

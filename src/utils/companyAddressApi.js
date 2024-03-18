@@ -9,12 +9,8 @@ export const fetchAddressData = (addressSeqNo) => {
             return res.json();
         })
         .then((data) => {
-            if (!data || !data.success || !Array.isArray(data.result.records)) {
-                console.error("Invalid data structure in API response:", data);
-                throw new Error("Invalid data structure in API response");
-            }
             const filteredAddress = data.result.records.filter(record => record.address_seq_no === addressSeqNo);
-            return filteredAddress; // Return an array with the filtered address or an empty array if not found
+            return filteredAddress; // Return an array with the filtered ad
         })
         .catch((error) => {
             console.error("Error fetching address data:", error);
