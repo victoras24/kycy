@@ -2,56 +2,52 @@ import React, { useState, useEffect } from "react";
 import { ImMagicWand } from "react-icons/im";
 import { FaMicrophone } from "react-icons/fa";
 import debounce from "lodash/debounce";
-import { fetchCompanyData } from '../utils/companyDataApi';
-import { fetchAddressData } from '../utils/companyAddressApi';
 
 export default function Search() {
     const [input, setInput] = useState("")
-    const [data, setData] = useState([])
+    const [organisations, setOrganisations] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 
-    const debouncedFetchDataFromApi = debounce((value) => {
-        fetchDataFromApi(value)
+    const debouncedFetchCompanyData = debounce((value) => {
+        fetchCompanyData(value)
     }, 300)
 
     useEffect(() => {
         if (input.trim() !== "") {
-            debouncedFetchDataFromApi(input)
+            debouncedFetchCompanyData(input)
         } else {
-            setData([])
+            setOrganisations([])
         }
-        return () => debouncedFetchDataFromApi.cancel()
+        // Cleanup debounce on unmount
+        return () => debouncedFetchCompanyData.cancel()
     }, [input])
 
-    const fetchDataFromApi = (value) => {
+    const fetchCompanyData = (value) => {
         setLoading(true)
-        fetchCompanyData(value)
-            .then((companyData) => {
-                const addressPromises = companyData.map(company => {
-                    return fetchAddressData(company.address_seq_no)
-                })
-                Promise.all(addressPromises)
-                    .then((addressResults) => {
-                        const mergedData = companyData.map((company, index) => {
-                            return {
-                                ...company,
-                                addresses: addressResults[index] || []
-                            }
-                        })
-                        setData(mergedData)
-                    })
+        fetch(`http://localhost:3000/api/organisations?keyword=${value}`)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok')
+                }
+                return res.json()
+            })
+            .then((data) => {
+                setOrganisations(data)
+                setLoading(false)
+                setError(null)
             })
             .catch((error) => {
+                console.error('Error fetching data:', error)
                 setError(error.message)
-            })
-            .finally(() => {
                 setLoading(false)
+                setOrganisations([])
             })
     }
 
     return (
         <div className="search-bar-container">
+
             <div className="input-wrapper">
                 <ImMagicWand id="search-icon" />
                 <input
@@ -66,27 +62,23 @@ export default function Search() {
                 </div>
             </div>
             {error && <div>Error: {error}</div>}
-            {data.length > 0 && (
+            {organisations.length > 0 && (
                 <div className="result-wrapper">
-                    {data.map((item, index) => (
+                    {organisations.map((company, index) => (
                         <div className="search-result" key={index}>
                             <div className="search-result-organisation-name">
-                                {item.organisation_name}
+                                {company["organisation_name"]}
                             </div>
-                            {item.addresses && (
-                                <div className="search-result-address">
-                                    {item.addresses.map((address, idx) => (
-                                        <div className="search-result-each-address" key={idx}>
-                                            {`${address.street}, ${address.building}, ${address.territory}`}
-                                        </div>
-                                    ))}
-                                </div>
-
-                            )}
+                            <div className="search-result-address">
+                                {company["street"]}
+                                {company["building"]}
+                                {company["territory"]}
+                            </div>
                         </div>
                     ))}
                 </div>
             )}
         </div>
+
     )
 }
