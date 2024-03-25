@@ -50,6 +50,10 @@
     margin: 5px;
 }
 
+#microphone-icon {
+    cursor: pointer;
+}
+
 .result-wrapper {
     margin-bottom: 30px;
     padding: 10px;
