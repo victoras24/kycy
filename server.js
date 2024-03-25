@@ -11,7 +11,7 @@ const app = express();
 const port = 3000;
 
 const corsOptions = {
-    origin: 'https://kycy.netlify.app'
+    origin: 'https://kycy.vercel.app/'
 };
 
 app.use(cors(corsOptions));
@@ -39,7 +39,7 @@ app.get('/api/organisations', async (req, res) => {
             SELECT *
             FROM organisations
             WHERE LOWER(organisation_name) LIKE LOWER($1)
-        `;
+        `
         const result = await pool.query(query, [`%${keyword}%`]);
         res.json(result.rows);
     } catch (error) {
@@ -55,3 +55,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
+
+export default app;
