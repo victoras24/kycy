@@ -25,7 +25,7 @@ export default function Search() {
 
     const fetchCompanyData = (value) => {
         setLoading(true)
-        fetch(`http://localhost:3000/api/organisations?keyword=${value}`)
+        fetch(`https://kycy.vercel.app/api/organisations?keyword=${value}`)
             .then((res) => {
                 if (!res.ok) {
                     throw new Error('Network response was not ok')

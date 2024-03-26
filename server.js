@@ -11,7 +11,7 @@ const app = express();
 const port = 3000;
 
 const corsOptions = {
-    origin: 'https://kycy.vercel.app/'
+    origin: '*'
 };
 
 app.use(cors(corsOptions));
